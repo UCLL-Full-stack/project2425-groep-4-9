@@ -6,7 +6,7 @@ export class Team {
     readonly name: string;
     readonly points: number;
 
-    readonly userId: number | null;
+    readonly userId: number;
 
     readonly competition: Competition;
 
@@ -14,13 +14,13 @@ export class Team {
         id: number;
         name: string;
         points: number;
-        userId: number | null;
+        userId: number;
         competition: Competition;
     }) {
         this.id = team.id;
         this.name = team.name;
         this.points = team.points;
-        this.userId = team.userId ?? null;
+        this.userId = team.userId;
         this.competition = team.competition;
     }
 

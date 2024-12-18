@@ -31,7 +31,7 @@ type MatchInput = {
     team1: TeamInput;
     team2: TeamInput;
     scoreTeam1: number;
-    score2Team2: number;
+    scoreTeam2: number;
     competition: CompetitionInput;
 };
 

@@ -3,6 +3,7 @@ import {
     Team as TeamPrisma,
     Competition as CompetitionPrisma,
 } from '@prisma/client';
+
 import { Role } from '../types';
 import { Team } from './team';
 
@@ -14,17 +15,17 @@ export class User {
     readonly team: Team | null;
 
     constructor(user: {
-        id?: number;
+        id: number;
         name: string;
         password: string;
         role: Role;
-        team?: Team | null;
+        team: Team | null;
     }) {
         this.id = user.id;
         this.name = user.name;
         this.password = user.password;
         this.role = user.role;
-        this.team = user.team ?? null;
+        this.team = user.team;
     }
 
     getId(): number | undefined {

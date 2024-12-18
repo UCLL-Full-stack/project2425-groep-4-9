@@ -13,6 +13,7 @@ const getAllUsers = async (): Promise<User[]> => {
                 },
             },
         });
+        console.log(userPrisma);
         return userPrisma.map((userPrisma) => User.from(userPrisma));
     } catch (error) {
         console.error('Error fetching users:', error);
@@ -46,7 +47,7 @@ const createUser = async ({ name, password, role, teamId }: UserInput) => {
                 name,
                 password,
                 role,
-                team: teamId ? { connect: { id: teamId } } : undefined, // Connecting to team if teamId is provided
+                team: teamId ? { connect: { id: teamId } } : undefined,
             },
             include: {
                 team: {

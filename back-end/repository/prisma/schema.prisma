@@ -12,8 +12,7 @@ model User {
   password String
   role     String
 
-  team     Team?   @relation(fields: [teamId], references: [id]) 
-  teamId   Int?    @unique 
+  team     Team?
 }
 
 model Team {
@@ -21,8 +20,8 @@ model Team {
   name           String
   points         Int          @default(0)
 
-  userId         Int        @unique  
-  user           User?        
+  userId         Int         @unique
+  user           User        @relation(fields: [userId], references: [id]) 
 
   competitionId  Int
   competition    Competition  @relation(fields: [competitionId], references: [id])

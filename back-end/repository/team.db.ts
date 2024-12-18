@@ -1,6 +1,22 @@
 import database from '../util/database';
 import { Team } from '../model/team';
 
+const getAllTeams = async (): Promise<Team[]> => {
+    try {
+        const teamsPrisma = await database.team.findMany({
+            include: {
+                competition: true,
+                user: true,
+            },
+        });
+        console.log(teamsPrisma);
+        return teamsPrisma.map((teamsPrisma) => Team.from(teamsPrisma));
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        throw new Error('no teams');
+    }
+};
+
 const createTeam = async ({
     name,
     userId,
@@ -15,8 +31,9 @@ const createTeam = async ({
             data: {
                 name,
                 points: 0,
-                userId,
-
+                user: {
+                    connect: { id: userId },
+                },
                 competition: {
                     connect: { id: competitionId },
                 },
@@ -53,4 +70,5 @@ const getTeamById = async ({ id }: { id: number | undefined }): Promise<Team | n
 export default {
     createTeam,
     getTeamById,
+    getAllTeams,
 };

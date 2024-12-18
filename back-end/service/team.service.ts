@@ -2,6 +2,13 @@ import { Team } from '../model/team';
 import teamDb from '../repository/team.db';
 import { Competition } from '../model/competition';
 import database from '../util/database';
+import userDb from '../repository/user.db';
+import { User } from '../model/user';
+
+const getAllTeams = async (): Promise<Team[]> => {
+    const teams = await teamDb.getAllTeams();
+    return teams;
+};
 
 const createTeam = async ({
     name,
@@ -39,4 +46,7 @@ const createTeam = async ({
     return team;
 };
 
-export default { createTeam };
+export default {
+    createTeam,
+    getAllTeams,
+};
