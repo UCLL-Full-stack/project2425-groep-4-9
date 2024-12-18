@@ -58,4 +58,37 @@ userRouter.post('/', async (req: Request, res: Response) => {
     }
 });
 
+/**
+ * @swagger
+ * /users/signup:
+ *   post:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Create a new user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/UserInput'
+ *     responses:
+ *       200:
+ *         description: The user was successfully created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ */
+
+
+userRouter.post('/signup', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const userInput = <UserInput>req.body;
+        const user = await userService.createUser(userInput);
+        res.status(200).json(user);
+    } catch (error) {
+        next(error);
+    }
+});
+
 export default userRouter;

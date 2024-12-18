@@ -1,8 +1,10 @@
 import userDB from '../repository/user.db';
 import { User } from '../model/user';
-import { TeamInput, UserInput } from '../types';
+import { AuthenticationResponse, TeamInput, UserInput } from '../types';
 import userDb from '../repository/user.db';
 import teamDb from '../repository/team.db';
+import bcrypt from 'bcrypt';
+import { generateJwtToken } from '../util/jwt';
 
 const getAllUsers = async (): Promise<User[]> => {
     const users = await userDB.getAllUsers();
@@ -45,4 +47,19 @@ const getUserByName = async ({ name }: { name: string }): Promise<User> => {
     }
     return user;
 };
-export default { getAllUsers, createUser, getUserByName };
+
+const authenticate = async ({name, password}: UserInput): Promise<AuthenticationResponse> => {
+    const user = await userDB.getUserByName({name});
+    if (!user) {
+        throw new Error(`User with username: ${name} does not exist.`);
+    }
+    const passwordMatch = await bcrypt.compare(password, user.getPassword());
+    if (!passwordMatch) {
+        throw new Error('Invalid password');
+    }
+    return {token: generateJwtToken({ name, role: user.getRole(), }),
+            name: user.name,
+    };
+}
+
+export default { getAllUsers, createUser, getUserByName, authenticate };

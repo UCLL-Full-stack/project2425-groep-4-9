@@ -35,4 +35,9 @@ type MatchInput = {
     competition: CompetitionInput;
 };
 
-export { Role, UserInput, TeamInput, CompetitionInput, MatchInput };
+type AuthenticationResponse = {
+    token: string;
+    name: string;   
+};
+
+export { Role, UserInput, TeamInput, CompetitionInput, MatchInput, AuthenticationResponse };
