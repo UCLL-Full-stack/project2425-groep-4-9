@@ -1,0 +1,67 @@
+{
+    "app.title": "Football App",
+
+    "header": {
+        "home": "Home",
+        "competitions": "Competitions",
+        "teams": "Teams",
+        "match": "Match",
+        "login": "Login",
+        "sigup": "Signup",
+        "language": "Language"
+    },
+
+    "general.error": "An error has occurred. Please try again later.",
+    "login": {
+        "title": "Login",
+        "button": "Login",
+        "success": "Login succesful. Redirecting to homepage...",
+        "validate": {
+            "name": "Name is required",
+            "password": "Password is required"
+        },
+        "label": { "name": "Name", "password": "Password" }
+    },
+
+    "register": {
+        "title": "Register",
+        "button": "Register",
+        "success": "Register succesful. Redirecting to loginpage...",
+        "validate": {
+            "name": "Name is required",
+            "password": "Password is required"
+        },
+        "label": { "name": "Name", "password": "Password" },
+
+        "competition": {
+            "add": {
+                "name": "Competition name",
+                "matches": "Matches Played",
+                "button": "Create Competition",
+                "noCompetitions": "No competitions found",
+                "matches2": "Matches Played:",
+                "button2": "Add Competition",
+                "title": "Add new competition"
+            },
+            "title2": "Competitions",
+            "overview": "Competitions Overview",
+            "name": "name",
+            "name2": "Name:",
+            "filter": "filter by ID",
+            "management": "Competition Management"
+        },
+
+        "team": {
+            "add": "Add Team",
+            "management": "Team Management",
+            "filter": "Filter by competition",
+            "name": "Team Name",
+            "points": "Points",
+            "competition": "Competition",
+            "noTeams": "No teams found",
+            "Create": "Create Team",
+            "select": "Select a competition",
+            "add2": "Add new team"
+        }
+    }
+}

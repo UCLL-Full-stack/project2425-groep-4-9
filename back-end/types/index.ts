@@ -1,26 +1,38 @@
-type Role = 'admin' | 'user';
+import { Team } from '../model/team';
+
+type Role = 'admin' | 'owner' | 'player';
 
 type UserInput = {
     id?: number;
     name: string;
     password: string;
     role: Role;
-}
+    team?: Team;
+    teamId?: number;
+};
 
 type TeamInput = {
     id?: number;
     name: string;
     points: number;
-    owner: UserInput;
+    userId: number;
     competition: CompetitionInput;
-}
+    competitionId: number;
+};
+
+type TeamUpdate = {
+    id?: number;
+    name: string;
+    points: number;
+    userId: number;
+    competitionId: number;
+};
 
 type CompetitionInput = {
     id?: number;
     name: string;
     matchesPlayed: number;
-    teams: TeamInput[];
-}
+};
 
 type MatchInput = {
     id?: number;
@@ -28,8 +40,22 @@ type MatchInput = {
     score: string;
     team1: TeamInput;
     team2: TeamInput;
+    scoreTeam1: number;
+    scoreTeam2: number;
     competition: CompetitionInput;
-}
+};
 
+type AuthenticationResponse = {
+    token: string;
+    name: string;
+};
 
-export { Role, UserInput, TeamInput, CompetitionInput, MatchInput };
+export {
+    Role,
+    UserInput,
+    TeamInput,
+    CompetitionInput,
+    MatchInput,
+    AuthenticationResponse,
+    TeamUpdate,
+};

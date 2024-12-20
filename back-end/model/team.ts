@@ -1,36 +1,43 @@
-import { User } from './user';
+import { Team as TeamPrisma, Competition as CompetitionPrisma } from '@prisma/client';
 import { Competition } from './competition';
 
 export class Team {
-    private id: number;
-    private name: string;
-    private points: number;
-    private owner: User;
-    private competitionId: number;
+    readonly id: number;
+    readonly name: string;
+    readonly points: number;
 
-    constructor({
-        id,
-        name,
-        points,
-        owner,
-        competitionId,
-    }: {
+    readonly userId: number;
+
+    readonly competition: Competition;
+
+    constructor(team: {
         id: number;
         name: string;
         points: number;
-        owner: User;
-        competitionId: number;
+        userId: number;
+        competition: Competition;
     }) {
-        this.id = id;
-        this.name = name;
-        this.points = points;
-        this.owner = owner;
-        this.competitionId = competitionId;
+        this.id = team.id;
+        this.name = team.name;
+        this.points = team.points;
+        this.userId = team.userId;
+        this.competition = team.competition;
     }
 
-    public getCompetitionId(): number {
-        return this.competitionId;
+    validate(user: {
+        name: string;
+        points: string;
+        userId: number;
+        competition: Competition;
+    }): void {
+        if (!user.name?.trim()) {
+            throw new Error('Name is required');
+        }
+        if (!user.points?.trim()) {
+            throw new Error('Password is required');
+        }
     }
+
     getId(): number | undefined {
         return this.id;
     }
@@ -43,8 +50,8 @@ export class Team {
         return this.points;
     }
 
-    getOwner(): User {
-        return this.owner;
+    getuserId(): number | null {
+        return this.userId;
     }
 
     equals(team: Team): boolean {
@@ -52,8 +59,23 @@ export class Team {
             this.id === team.getId() &&
             this.name === team.getName() &&
             this.points === team.getPoints() &&
-            this.owner.equals(team.getOwner()) &&
-            this.competitionId === team.getCompetitionId()
+            this.userId === team.getuserId()
         );
+    }
+
+    static from({
+        id,
+        name,
+        points,
+        userId,
+        competition,
+    }: TeamPrisma & { competition: CompetitionPrisma }) {
+        return new Team({
+            id,
+            name,
+            points,
+            userId: userId,
+            competition: Competition.from(competition),
+        });
     }
 }

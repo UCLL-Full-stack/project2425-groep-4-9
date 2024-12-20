@@ -1,0 +1,66 @@
+{
+    "app.title": "Voetbal App",
+
+    "header": {
+        "home": "Start",
+        "competitions": "Competities",
+        "teams": "Teams",
+        "match": "Match",
+        "login": "Login",
+        "sigup": "Registreren",
+        "language": "Taal"
+    },
+
+    "general.error": "Er is een fout opgetreden. Probeer het later opnieuw.",
+    "login": {
+        "title": "Inloggen",
+        "button": "Inloggen",
+        "success": "Inloggen succesvol. Doorsturen naar de homepage...",
+        "validate": {
+            "name": "Naam is verplicht",
+            "password": "Wachtwoord is verplicht"
+        },
+        "label": { "name": "Naam", "password": "Wachtwoord" }
+    },
+    "register": {
+        "title": "Registreer",
+        "button": "Registreer",
+        "success": "Registratie gelukt. Omleiden naar de login pagina...",
+        "validate": {
+            "name": "Naam is verplicht",
+            "password": "Wachtwoord is verplicht"
+        },
+        "label": { "name": "Naam", "password": "Wachtwoord" },
+
+        "competition": {
+            "add": {
+                "name": "Competitienaam",
+                "matches": "Gespeelde wedstrijden",
+                "button": "Competitie aanmaken",
+                "noCompetitions": "Geen competities gevonden",
+                "matches2": "Gespeelde wedstrijden:",
+                "button2": "Competitie toevoegen",
+                "title": "Nieuwe competitie toevoegen"
+            },
+            "title2": "Competities",
+            "overview": "Overzicht competities",
+            "name": "naam",
+            "name2": "Naam:",
+            "filter": "filteren op ID",
+            "management": "Competitiebeheer"
+        },
+
+        "team": {
+            "add": "Team toevoegen",
+            "management": "Teambeheer",
+            "filter": "Filteren op competitie",
+            "name": "Teamnaam",
+            "points": "Punten",
+            "competition": "Competitie",
+            "noTeams": "Geen teams gevonden",
+            "Create": "Team aanmaken",
+            "select": "Selecteer een competitie",
+            "add2": "Nieuw team toevoegen"
+        }
+    }
+}

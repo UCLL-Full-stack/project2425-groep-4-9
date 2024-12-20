@@ -1,50 +1,161 @@
+import database from '../util/database';
 import { Team } from '../model/team';
-import { User } from '../model/user';
-import { competitions } from './competition.db';
 
-const [amateurLeague] = competitions;
-
-const teams = [
-    new Team({
-        id: 1,
-        name: 'sk diamant',
-        points: 0,
-        owner: new User({ id: 1, name: 'Jente', password: 'jente', role: 'admin' }),
-        competitionId: amateurLeague.getId()!,
-    }),
-    new Team({
-        id: 2,
-        name: 'fc heist goor',
-        points: 0,
-        owner: new User({ id: 2, name: 'Tyas', password: 'tyas', role: 'admin' }),
-        competitionId: amateurLeague.getId()!,
-    }),
-    new Team({
-        id: 3,
-        name: 'Real sas',
-        points: 0,
-        owner: new User({ id: 3, name: 'Fons', password: 'sas', role: 'admin' }),
-        competitionId: amateurLeague.getId()!,
-    }),
-];
-
-teams.forEach((team) => amateurLeague.addTeam(team));
-
-const getAllTeams = (): Team[] => {
-    return teams;
-};
-
-const getTeamById = (id: number): Team | undefined => {
+const getAllTeams = async (): Promise<Team[]> => {
     try {
-        return teams.find((team) => team.getId() === id);
+        const teamsPrisma = await database.team.findMany({
+            include: {
+                competition: true,
+                user: true,
+            },
+        });
+        console.log(teamsPrisma);
+        return teamsPrisma.map((teamsPrisma) => Team.from(teamsPrisma));
     } catch (error) {
-        console.error(error);
-        throw new Error('An error occurred while getting a team by id');
+        console.error('Error fetching users:', error);
+        throw new Error('no teams');
     }
 };
 
-const getTeamsByCompetition = (competitionId: number): Team[] => {
-    return teams.filter((team) => team.getCompetitionId() === competitionId);
+const deleteTeam = async ({ id }: { id: number }): Promise<void> => {
+    try {
+        await database.match.deleteMany({
+            where: {
+                OR: [{ team1Id: id }, { team2Id: id }],
+            },
+        });
+        await database.team.delete({
+            where: { id },
+            include: {
+                competition: true,
+                user: true,
+            },
+        });
+
+        console.log(`Team with id ${id} and its associated matches successfully deleted.`);
+    } catch (error) {
+        console.error(`Error deleting team with id ${id}:`, error);
+        throw new Error('Database error, see server logs');
+    }
 };
 
-export default { getAllTeams, getTeamById, getTeamsByCompetition };
+const createTeam = async ({
+    name,
+    userId,
+    competitionId,
+}: {
+    name: string;
+    userId: number;
+    competitionId: number;
+}): Promise<Team> => {
+    try {
+        const teamPrisma = await database.team.create({
+            data: {
+                name,
+                points: 0,
+                user: {
+                    connect: { id: userId },
+                },
+                competition: {
+                    connect: { id: competitionId },
+                },
+            },
+            include: {
+                competition: true,
+                user: true,
+            },
+        });
+
+        return Team.from(teamPrisma);
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
+
+const getTeamsByCompetition = async ({
+    competitionId,
+}: {
+    competitionId: number;
+}): Promise<Team[]> => {
+    try {
+        const teamsPrisma = await database.team.findMany({
+            where: {
+                competitionId,
+            },
+            include: {
+                competition: true,
+                user: true,
+            },
+        });
+
+        return teamsPrisma.map((teamPrisma) => Team.from(teamPrisma));
+    } catch (error) {
+        console.error(`Error fetching teams for competition ${competitionId}:`, error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
+
+const getTeamById = async ({ id }: { id: number | undefined }): Promise<Team | null> => {
+    try {
+        const teamPrisma = await database.team.findUnique({
+            where: { id },
+            include: {
+                competition: true,
+            },
+        });
+
+        return teamPrisma ? Team.from(teamPrisma) : null;
+    } catch (error) {
+        console.error(error);
+        throw new Error('error');
+    }
+};
+
+const updateTeam = async ({
+    id,
+    name,
+    points,
+    userId,
+    competitionId,
+}: {
+    id: number;
+    name: string;
+    points: number;
+    userId: number;
+    competitionId: number;
+}): Promise<Team> => {
+    try {
+        const teamPrisma = await database.team.update({
+            where: { id },
+            data: {
+                name,
+                points,
+                user: {
+                    connect: { id: userId },
+                },
+                competition: {
+                    connect: { id: competitionId },
+                },
+            },
+            include: {
+                competition: true,
+                user: true,
+            },
+        });
+
+        return Team.from(teamPrisma);
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
+
+export default {
+    createTeam,
+    deleteTeam,
+    getTeamsByCompetition,
+    getTeamById,
+    getAllTeams,
+    updateTeam,
+};
