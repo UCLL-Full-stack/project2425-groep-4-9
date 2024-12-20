@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import CompetitionService from '@services/CompetitionService';
-import { Competition } from '@types';
+import { Competition, Team } from '@types';
 import Link from 'next/link';
 import Header from '@components/header';
+import TeamService from '@services/TeamsService';
 
 const CompetitionsPage: React.FC = () => {
     const [competitions, setCompetitions] = useState<Competition[]>([]);
     const [competition, setCompetition] = useState<Competition | null>(null);
+    const [teams, setTeams] = useState<Team[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [competitionId, setCompetitionId] = useState<number | ''>('');
 
@@ -30,8 +32,28 @@ const CompetitionsPage: React.FC = () => {
             const data = await CompetitionService.getCompetitionById(Number(competitionId));
             setCompetition(data);
             setError(null);
+
+            // Fetch teams for the selected competition
+            const teamsData = await TeamService.getTeamsByCompetition(Number(competitionId));
+            setTeams(teamsData);
         } catch (err) {
-            setError('Failed to fetch competition by ID.');
+            setError('Failed to fetch competition by ID or associated teams.');
+            setTeams([]);
+        }
+    };
+
+    const handleCompetitionClick = async (id: number) => {
+        try {
+            const data = await CompetitionService.getCompetitionById(id);
+            setCompetition(data);
+            setError(null);
+
+            // Fetch teams for the selected competition
+            const teamsData = await TeamService.getTeamsByCompetition(id);
+            setTeams(teamsData);
+        } catch (err) {
+            setError('Failed to fetch competition by ID or associated teams.');
+            setTeams([]);
         }
     };
 
@@ -83,39 +105,96 @@ const CompetitionsPage: React.FC = () => {
                     )}
                 </section>
 
-                <h2 className="text-lg font-semibold mb-4">Competitions</h2>
-                <div className="overflow-x-auto">
-                    <table className="min-w-full border-collapse border border-gray-300">
-                        <thead>
-                            <tr className="bg-gray-100">
-                                <th className="border border-gray-300 px-4 py-2">Name</th>
-                                <th className="border border-gray-300 px-4 py-2">Matches Played</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {competitions.length > 0 ? (
-                                competitions.map((comp) => (
-                                    <tr key={comp.id} className="hover:bg-gray-50">
-                                        <td className="border border-gray-300 px-4 py-2">
-                                            {comp.name}
-                                        </td>
-                                        <td className="border border-gray-300 px-4 py-2">
-                                            {comp.matchesPlayed}
-                                        </td>
+                <div className="flex gap-8">
+                    {/* Left Column: Competitions Table */}
+                    <div className="flex-1">
+                        <h2 className="text-lg font-semibold mb-4">Competitions</h2>
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full border-collapse border border-gray-300">
+                                <thead>
+                                    <tr className="bg-gray-100">
+                                        <th className="border border-gray-300 px-4 py-2">Name</th>
+                                        <th className="border border-gray-300 px-4 py-2">
+                                            Matches Played
+                                        </th>
+                                        <th className="border border-gray-300 px-4 py-2">
+                                            Actions
+                                        </th>
                                     </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td
-                                        colSpan={2}
-                                        className="border border-gray-300 px-4 py-2 text-center"
-                                    >
-                                        No competitions found
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+                                </thead>
+                                <tbody>
+                                    {competitions.length > 0 ? (
+                                        competitions.map((comp) => (
+                                            <tr key={comp.id} className="hover:bg-gray-50">
+                                                <td className="border border-gray-300 px-4 py-2">
+                                                    {comp.name}
+                                                </td>
+                                                <td className="border border-gray-300 px-4 py-2">
+                                                    {comp.matchesPlayed}
+                                                </td>
+                                                <td className="border border-gray-300 px-4 py-2">
+                                                    <button
+                                                        onClick={() =>
+                                                            handleCompetitionClick(comp.id)
+                                                        }
+                                                        className="text-blue-500 hover:underline"
+                                                    >
+                                                        View Teams
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td
+                                                colSpan={3}
+                                                className="border border-gray-300 px-4 py-2 text-center"
+                                            >
+                                                No competitions found
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {/* Right Column: Teams Table */}
+                    <div className="flex-1">
+                        {teams.length > 0 && (
+                            <>
+                                <h2 className="text-lg font-semibold mb-4">
+                                    Teams in Selected Competition
+                                </h2>
+                                <div className="overflow-x-auto">
+                                    <table className="min-w-full border-collapse border border-gray-300">
+                                        <thead>
+                                            <tr className="bg-gray-100">
+                                                <th className="border border-gray-300 px-4 py-2">
+                                                    Team Name
+                                                </th>
+                                                <th className="border border-gray-300 px-4 py-2">
+                                                    Points
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {teams.map((team) => (
+                                                <tr key={team.id} className="hover:bg-gray-50">
+                                                    <td className="border border-gray-300 px-4 py-2">
+                                                        {team.name}
+                                                    </td>
+                                                    <td className="border border-gray-300 px-4 py-2">
+                                                        {team.points}
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </>
+                        )}
+                    </div>
                 </div>
             </div>
         </>

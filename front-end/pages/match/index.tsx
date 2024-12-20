@@ -46,53 +46,17 @@ const MatchesPage = () => {
 
         try {
             const newMatch = {
-                id: 0,
                 date: newMatchDate,
                 scoreTeam1: newScoreTeam1,
                 scoreTeam2: newScoreTeam2,
-                competitionId: newCompetitionId,
                 competition: {
                     id: newCompetitionId,
-                    name: '',
-                    matchesPlayed: 0,
-                    teams: [],
-                    matches: [],
                 },
-                team1Id: newTeam1Id,
                 team1: {
-                    id: 0,
-                    name: '',
-                    points: 0,
-                    userId: 0,
-                    user: { id: 0, name: '', password: '', role: '' },
-                    competitionId: newCompetitionId,
-                    competition: {
-                        id: newCompetitionId,
-                        name: '',
-                        matchesPlayed: 0,
-                        teams: [],
-                        matches: [],
-                    },
-                    matchesAsTeam1: [],
-                    matchesAsTeam2: [],
+                    id: newTeam1Id,
                 },
-                team2Id: newTeam2Id,
                 team2: {
-                    id: 0,
-                    name: '',
-                    points: 0,
-                    userId: 0,
-                    user: { id: 0, name: '', password: '', role: '' },
-                    competitionId: newCompetitionId,
-                    competition: {
-                        id: newCompetitionId,
-                        name: '',
-                        matchesPlayed: 0,
-                        teams: [],
-                        matches: [],
-                    },
-                    matchesAsTeam1: [],
-                    matchesAsTeam2: [],
+                    id: newTeam2Id,
                 },
             };
             const createdMatch = await MatchService.createMatch(newMatch);

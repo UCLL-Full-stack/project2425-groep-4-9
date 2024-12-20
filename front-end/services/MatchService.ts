@@ -1,4 +1,4 @@
-import { Match } from '@types';
+import { CreateMatch, Match } from '@types';
 
 const getAllMatches = async () => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/match`, {
@@ -26,7 +26,7 @@ const getMatchById = async (id: number) => {
     return response.json();
 };
 
-const createMatch = async (match: Match) => {
+const createMatch = async (match: CreateMatch) => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/match`, {
         method: 'POST',
         headers: {
